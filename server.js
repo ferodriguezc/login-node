@@ -1,3 +1,4 @@
+// Importación de módulos
 const express = require("express");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
@@ -9,8 +10,6 @@ const routes = require('./routes/Routes');
 const action = require('./controllers/action');
 const db = require('./config/db');
 require('dotenv').config();
-
-
 
 // Middleware para analizar JSON
 app.use(express.json());
@@ -28,18 +27,9 @@ app.use(session({
 // Middleware para servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
-// Rutas
-app.use('/', routes);
-app.use('/', action);
-
-
-
-//subida de fotos y transformacion a webp
+// Configuración de Multer para la carga de archivos
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
 
 // Ruta para subir y convertir imágenes
 app.post('/upload', upload.single('image'), async (req, res) => {
@@ -64,6 +54,11 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   }
 });
 
+// Rutas
+app.use('/', routes);
+app.use('/', action);
+
+// Inicio del servidor
 const port = 3000;
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
